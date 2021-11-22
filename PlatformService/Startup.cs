@@ -20,18 +20,29 @@ namespace PlatformService
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IWebHostEnvironment env;
+        public IConfiguration Configuration { get; }
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
+            this.env = env;
             Configuration = configuration;
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<AppDbContext>(opt => 
-                opt.UseInMemoryDatabase("InMem"));
+            if(env.IsProduction())
+            {
+                Console.WriteLine("Using SqlServer db");
+                services.AddDbContext<AppDbContext>(opt => 
+                    opt.UseSqlServer(Configuration.GetConnectionString("PlatformsConn")));
+            }
+            else
+            {
+                Console.WriteLine("Using InMem db");
+                services.AddDbContext<AppDbContext>(opt => 
+                    opt.UseInMemoryDatabase("InMem"));
+            }
 
             services.AddScoped<IPlatformRepo,PlatformRepo>();
 
@@ -68,7 +79,7 @@ namespace PlatformService
                 endpoints.MapControllers();
             });
 
-            PrepDb.PrepPopulation(app);
+            PrepDb.PrepPopulation(app, env.IsProduction());
         }
     }
 }

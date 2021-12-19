@@ -27,13 +27,13 @@ namespace CommandsService.Controllers
         {
             Console.WriteLine("Inbound POST # Command Service");
             
-            return Ok("Inbound test of from Platforms Controller");
+            return Ok("--> Inbound test of from Platforms Controller");
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<PlatformReadDto>> GetPlatforms()
         {
-            Console.WriteLine("Getting Platforms from CommandsService");
+            Console.WriteLine("--> Getting Platforms from CommandsService");
             var platfrormItems = repository.GetAllPlatforms();
 
             return Ok(mapper.Map<IEnumerable<PlatformReadDto>>(platfrormItems));

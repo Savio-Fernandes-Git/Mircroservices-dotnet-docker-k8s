@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using PlatformService.AsyncDataServices;
 using PlatformService.Data;
 using PlatformService.SyncDataServices.Http;
 
@@ -39,7 +40,7 @@ namespace PlatformService
             }
             else
             {
-                Console.WriteLine("Using InMem db");
+                Console.WriteLine("--> Using InMem db");
                 services.AddDbContext<AppDbContext>(opt => 
                     opt.UseInMemoryDatabase("InMem"));
             }
@@ -47,6 +48,7 @@ namespace PlatformService
             services.AddScoped<IPlatformRepo,PlatformRepo>();
 
             services.AddHttpClient<ICommandDataClient, HttpCommandDataClient>();
+            services.AddSingleton<IMessageBusClient,MessageBusClient>();
 
             services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -55,7 +57,7 @@ namespace PlatformService
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "PlatformService", Version = "v1" });
             });
 
-            Console.WriteLine($"Command service endpoint {Configuration["CommandService"]}");
+            Console.WriteLine($"--> Command service endpoint {Configuration["CommandService"]}");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

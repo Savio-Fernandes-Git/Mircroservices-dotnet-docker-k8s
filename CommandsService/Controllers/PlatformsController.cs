@@ -25,7 +25,7 @@ namespace CommandsService.Controllers
         [HttpPost]
         public ActionResult TestInBoundConnection()
         {
-            Console.WriteLine("Inbound POST # Command Service");
+            Console.WriteLine("--> Inbound POST # Command Service");
             
             return Ok("--> Inbound test of from Platforms Controller");
         }
@@ -34,9 +34,9 @@ namespace CommandsService.Controllers
         public ActionResult<IEnumerable<PlatformReadDto>> GetPlatforms()
         {
             Console.WriteLine("--> Getting Platforms from CommandsService");
-            var platfrormItems = repository.GetAllPlatforms();
+            var platformItems = repository.GetAllPlatforms();
 
-            return Ok(mapper.Map<IEnumerable<PlatformReadDto>>(platfrormItems));
+            return Ok(mapper.Map<IEnumerable<PlatformReadDto>>(platformItems));
         }
     }
 }
